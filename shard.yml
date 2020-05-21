@@ -1,0 +1,14 @@
+name: responsible
+version: 0.1.0
+
+authors:
+  - Kim Burgess <kim@place.technology>
+
+crystal: 0.34.0
+
+license: MIT
+
+development_dependencies:
+  webmock:
+    github: manastech/webmock.cr
+    branch: master
