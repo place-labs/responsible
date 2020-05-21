@@ -36,6 +36,7 @@ class Responsible::Response
     end
   {% end %}
 
+
   # Reads the contents of the body into the specified type `T`.
   #
   # `T.from_json` must exist and be capable of deserializing a JSON string.
@@ -46,6 +47,11 @@ class Responsible::Response
       raise Error.from(self) unless success?
     end
 
-    T.from_json(body || body_io)
+    case headers["content-type"]
+    when .starts_with? "application/json"
+      T.from_json(body || body_io)
+    else
+      raise Error.new "unsupported content type (#{content_type})"
+    end
   end
 end

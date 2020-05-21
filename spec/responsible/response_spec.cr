@@ -48,5 +48,15 @@ describe Responsible::Response do
         error[:message].should eq("computer says no")
       end
     end
+
+    it "raises an exception for unsupported content types" do
+      WebMock.stub(:get, "www.example.com").to_return(
+        headers: { "Content-Type" => "text/csv" },
+        body: "this,is,a,csv"
+      )
+      expect_raises(Responsible::Error) do
+        ~HTTP::Client.get("www.example.com") >> Array(String)
+      end
+    end
   end
 end
