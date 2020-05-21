@@ -5,7 +5,7 @@ In the wise words of the modern poet Ice Cube:
 > So come on and chickity check yo self before you wreck yo self
 
 Responsible is a library that makes it simple, fast an easy to check HTTP responses in crystal-lang.
-It provides a lightweight API dealing with errors, logging and static, type-safe parsing.
+It provides a lightweight API for dealing with errors, logging and static, type-safe parsing.
 It works directly with `HTTP::Client::Response` objects and can function in tandem with clients that build on top of these.
 
 
@@ -79,7 +79,7 @@ They also let you inject behaviour for dealing with different response scenarios
 ```crystal
 # Global handlers - this will apply to every reponse
 Responsible.on_client_error do |response|
-  raise "I'm a teapot" if status_code == 418
+  raise "I'm a teapot" if response.status_code == 418
 end
 
 # Local action - these apply to the target response
@@ -104,7 +104,7 @@ fact.value
 # => Chuck Norris has a large, curved talon on each foot, much like the Velociraptor.
 ```
 
-This also works inline for terse, type-safe, error checked response.
+This also works inline for terse, type-safe, error checked responses.
 ```crystal
 fact = ~HTTP::Client.get("https://api.chucknorris.io/jokes/random") >> NamedTuple(value: String)
 fact[:value]
