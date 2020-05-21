@@ -28,25 +28,37 @@ It deals purely with response objects once you already have them, regardless of 
 
 2. Run `shards install`
 
+3. Load via:
+
+   ```crystal
+   require "responsible"`
+   ```
+
 
 ## Usage
 
-To become responsible, prefix a response with `~`.
-
-This works with the stdlib:
+To become responsible, prefix any response or method that returns a response with `~`.
 ```crystal
-require "responsible"
-
-~HTTP::Client.get("https://www.example.com")
+response = ~HTTP::Client.get("https://www.example.com")
 ```
 
-Or any shards that build on this:
+Error conditions are clear:
 ```crystal
-# TODO: find example
+response.on_server_error do
+  # oh noes
+end
 ```
+
+When working with JSON, it also lets you efficiently parse to type-safe objects.
+```crystal
+response = ~HTTP::Client.get("https://www.example.com") >> NamedTuple(message: String)
+response[:message]
+# => hello world
+```
+
+---
 
 Responsible Responses™ maintain all the existing functionality of a vanilla response object.
-
 ```crystal
 chuck_norris_response = ~HTTP::Client.get("https://api.chucknorris.io/jokes/random")
 
@@ -65,9 +77,9 @@ chuck_norris_response.body
 
 They also let you inject behaviour for dealing with different response scenarios.
 ```crystal
-# Global middleware - this will apply to every reponse
+# Global handlers - this will apply to every reponse
 Responsible.on_client_error do |response|
-  raise "I'm a teapot" if response.status_code == 418
+  raise "I'm a teapot" if status_code == 418
 end
 
 # Local action - these apply to the target response
