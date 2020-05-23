@@ -111,6 +111,33 @@ fact[:value]
 # => Chuck Norris can binary search unsorted data.
 ```
 
+## Again, but verbose-er-er
+
+If the operator overloading is a too terse, you may also used named methods.
+
+To wrap a response object:
+```crystal
+response = HTTP::Client.get("www.example.com")
+response = Responsible::Response.new(response)
+```
+This performs the same action as using the `~` operator.
+
+When you are ready to parse the response body into a well-typed object:
+```crystal
+response.parse_to(MyType)
+```
+
+This syntax also supports specifying a block, where you can define you own handling for parsing errors.
+```crystal
+response.parse_to(MyType) do |exception|
+  # Handle, re-raise or re-try as appropriate.
+end
+```
+
+In addition to a method that will return `nil` when a parser error occurs.
+```crystal
+response.parse_to?(MaybeMyType)
+```
 
 ## Contributors
 
