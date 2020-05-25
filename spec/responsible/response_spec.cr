@@ -15,16 +15,33 @@ describe Responsible::Response do
   end
 
   describe "#parse_to" do
+    WebMock.stub(:get, "www.example.com").to_return(
+      headers: { "Content-Type" => "application/json" },
+      body: <<-JSON
+        {"value":"foo"}
+      JSON
+    )
+    response = ~HTTP::Client.get("www.example.com") 
+
     it "deserializes a JSON body" do
-      WebMock.stub(:get, "www.example.com").to_return(
-        headers: { "Content-Type" => "application/json" },
-        body: <<-JSON
-          {"value":"foo"}
-        JSON
-      )
-      response = ~HTTP::Client.get("www.example.com") 
       result = response.parse_to NamedTuple(value: String)
       result[:value].should eq("foo")
+    end
+
+    it "raises an exception when a parsing error occurs" do
+      ex = expect_raises Responsible::Error do
+        response.parse_to Float64
+      end
+      ex.cause.should be_a(JSON::ParseException)
+    end
+
+    it "supports block for handling errors" do
+      error_block_executed = false
+      response.parse_to(Float64) do |error|
+        error_block_executed = true
+        error.should be_a(JSON::ParseException)
+      end
+      error_block_executed.should be_true
     end
   end
 

@@ -111,6 +111,9 @@ fact[:value]
 # => Chuck Norris can binary search unsorted data.
 ```
 
+If the response format is incompatible with the specified type, a `Responsible::Error` will raise.
+This contains the parser expection via `error.cause`.
+
 ## Again, but verbose-er-er
 
 If the operator overloading is too terse, named methods are available.
