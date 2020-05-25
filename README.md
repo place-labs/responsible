@@ -111,10 +111,10 @@ fact[:value]
 # => Chuck Norris can binary search unsorted data.
 ```
 
-If the response format is incompatible with the specified type, a `Responsible::Error` will raise.
-This contains the parser expection via `error.cause`.
+If the response format is incompatible with the specified type a `Responsible::Error` will raise.
+This contains the parser exception via `error.cause`.
 
-To return `nil` in case of a parser error, specify the type to parse to as nillable.
+To return `nil` in place of a raising an error, specify the type to parse to as nillable.
 ```crystal
 chuck_norris_response >> Float64?
 # => nil
