@@ -88,7 +88,7 @@ chuck_norris_response.on_redirect do |response|
 end
 ```
 
-To parse a response to a matching type using the `>>` operator.
+To parse to a matching type use the `>>` operator.
 ```crystal
 struct ChuckNorrisFact
    include JSON::Serializable
@@ -114,7 +114,7 @@ fact[:value]
 If the response format is incompatible with the specified type a `Responsible::Error` will raise.
 This contains the parser exception via `error.cause`.
 
-To return `nil` in place of a raising an error, specify the type to parse to as nillable.
+To return `nil` in place of a raising an error, use a nilable target type.
 ```crystal
 chuck_norris_response >> Float64?
 # => nil
