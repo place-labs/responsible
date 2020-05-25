@@ -113,7 +113,7 @@ fact[:value]
 
 ## Again, but verbose-er-er
 
-If the operator overloading is a too terse, you may also used named methods.
+If the operator overloading is too terse, named methods are available.
 
 To wrap a response object:
 ```crystal
@@ -122,19 +122,20 @@ response = Responsible::Response.new(response)
 ```
 This performs the same action as using the `~` operator.
 
-When you are ready to parse the response body into a well-typed object:
+To parse into a type:
 ```crystal
 response.parse_to(MyType)
 ```
+This is the same behaviour as `>>`.
 
-This syntax also supports specifying a block, where you can define you own handling for parsing errors.
+An optional block argument supports defining custom parser error handling.
 ```crystal
 response.parse_to(MyType) do |exception|
-  # Handle, re-raise or re-try as appropriate.
+  # Handle, raise or re-try as appropriate.
 end
 ```
 
-In addition to a method that will return `nil` when a parser error occurs.
+To return `nil` in case of a parser error, use:
 ```crystal
 response.parse_to?(MaybeMyType)
 ```
