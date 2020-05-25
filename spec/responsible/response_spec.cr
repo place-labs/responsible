@@ -14,7 +14,7 @@ describe Responsible::Response do
     has_run.should be_true
   end
 
-  describe "#>>" do
+  describe "#parse_to" do
     it "deserializes a JSON body" do
       WebMock.stub(:get, "www.example.com").to_return(
         headers: { "Content-Type" => "application/json" },
@@ -22,10 +22,27 @@ describe Responsible::Response do
           {"value":"foo"}
         JSON
       )
-      response = ~HTTP::Client.get("www.example.com") >> NamedTuple(value: String)
-      response[:value].should eq("foo")
+      response = ~HTTP::Client.get("www.example.com") 
+      result = response.parse_to NamedTuple(value: String)
+      result[:value].should eq("foo")
     end
+  end
 
+  describe "#parse_to?" do
+    it "returns nil if the response cannot parse to the specified type" do
+      WebMock.stub(:get, "www.example.com").to_return(
+        headers: { "Content-Type" => "application/json" },
+        body: <<-JSON
+          {"value":"foo"}
+        JSON
+      )
+      response = ~HTTP::Client.get("www.example.com") 
+      result = response.parse_to? Float64
+      result.should be_nil
+    end
+  end
+
+  describe "#>>" do
     it "raises an exception on a non-successful response" do
       WebMock.stub(:get, "www.example.com").to_return(status: 500)
       expect_raises(Responsible::ServerError) do
