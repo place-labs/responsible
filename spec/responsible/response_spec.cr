@@ -92,5 +92,17 @@ describe Responsible::Response do
         ~HTTP::Client.get("www.example.com") >> Array(String)
       end
     end
+
+    it "returns nil on error when parsing to a nilable type" do
+      WebMock.stub(:get, "www.example.com").to_return(
+        headers: { "Content-Type" => "application/json" },
+        body: <<-JSON
+          {"value":"foo"}
+        JSON
+      )
+      response = ~HTTP::Client.get("www.example.com") 
+      result = response >> Float64?
+      result.should be_nil
+    end
   end
 end

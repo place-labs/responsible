@@ -76,9 +76,15 @@ class Responsible::Response
     end
   end
 
-  # Parses the contents of this response to the type *x*, or raises an
-  # `Responsible::Error` if this is not possible.
+  # Parses the contents of this response to the type *x*.
+  #
+  # If *x* is nilable, a parser error will result in `nil` being returned,
+  # otherwise a `Responsible::Error` will be raised if parsing is not possible.
   def >>(x : T.class) : T forall T
-    parse_to x
+    {% if T.nilable? %}
+      parse_to? x, ignore_response_code: true
+    {% else %}
+      parse_to x
+    {% end %}
   end
 end

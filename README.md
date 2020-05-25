@@ -58,7 +58,7 @@ response[:message]
 
 ---
 
-Responsible Responses™ maintain all the existing functionality of a vanilla response object.
+Responsible Responses™ maintain all existing functionality of a vanilla response object.
 ```crystal
 chuck_norris_response = ~HTTP::Client.get("https://api.chucknorris.io/jokes/random")
 
@@ -88,7 +88,7 @@ chuck_norris_response.on_redirect do |response|
 end
 ```
 
-Once you have a response that you are happy is valid, you can parse this out matching type using the `>>` operator.
+To parse a response to a matching type using the `>>` operator.
 ```crystal
 struct ChuckNorrisFact
    include JSON::Serializable
@@ -113,6 +113,12 @@ fact[:value]
 
 If the response format is incompatible with the specified type, a `Responsible::Error` will raise.
 This contains the parser expection via `error.cause`.
+
+To return `nil` in case of a parser error, specify the type to parse to as nillable.
+```crystal
+chuck_norris_response >> Float64?
+# => nil
+```
 
 ## Again, but verbose-er-er
 
