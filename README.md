@@ -7,6 +7,7 @@ In the wise words of the modern poet Ice Cube:
 Responsible is a library that makes it simple, fast an easy to check HTTP responses in crystal-lang.
 It provides a lightweight API for dealing with errors, logging and static, type-safe parsing.
 It works directly with `HTTP::Client::Response` objects and can function in tandem with clients that build on top of these.
+Third party libraries (like [halite](https://github.com/icyleaf/halitea), [crest](https://github.com/mamantoha/crest) and others) are [supported](#third-party-support) too!
 
 
 ## What this isn't
@@ -148,6 +149,21 @@ To return `nil` in case of a parser error, use:
 ```crystal
 response.parse_to?(MaybeMyType)
 ```
+
+## Third-party support
+
+Responsible works around a [minimal response object interface](./src/responsible/response_interface.cr).
+When you `require "responsible"`, support loads for `HTTP::Client::Response` objects by default.
+To support third party response objects use the `Responsible.support` macro.
+```crystal
+require "Halite"
+
+Responsible.support Halite::Response
+
+response = ~Halite.get("https://www.example.com") >> NamedTuple(message: String)
+response[:message]
+```
+
 
 ## Contributors
 

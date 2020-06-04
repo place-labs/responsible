@@ -1,9 +1,9 @@
-require "http/client/response"
 require "json"
+require "./response_interface"
 require "./response_type"
 
 class Responsible::Response
-  @response : HTTP::Client::Response
+  @response : ResponseInterface
   @type : ResponseType
   @in_handler : Bool = false
 
@@ -48,10 +48,12 @@ class Responsible::Response
   def parse_to(x : T.class, ignore_response_code = @in_handler, &block : Exception -> U) : T | U forall T, U
     raise Error.from(self) unless success? || ignore_response_code
 
-    case headers["content-type"]
-    when .starts_with? "application/json"
+    content_type = headers["content-type"].split(' ').first.downcase
+
+    case content_type
+    when "application/json"
       begin
-        T.from_json(body || body_io)
+        T.from_json(@response.body? || @response.body_io)
       rescue e
         yield e
       end
