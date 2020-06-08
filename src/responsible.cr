@@ -25,6 +25,19 @@ module Responsible
       {{ block.body if block.is_a? AstNode }}
     end
   end
+
+  # Wraps a expression that returns a supported response object into a
+  # `Responsible::Response` before attempting to parse this out into the return
+  # type of the surrounding method.
+  #
+  # This may be 
+  macro parse_to_return_type(&block)
+    \{{ raise "no return type on method" if @def.return_type.is_a? Nop }}
+    %response = begin
+      {{ block.body }}
+    end
+    Responsible::Response.new(%response).parse_to(\{{ @def.return_type }})
+  end
 end
 
 Responsible.support HTTP::Client::Response

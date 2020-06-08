@@ -43,7 +43,7 @@ To become responsible, prefix any response or method that returns a response wit
 response = ~HTTP::Client.get("https://www.example.com")
 ```
 
-Error conditions are clear:
+This allows a clear way to express what should happen when errors occur.
 ```crystal
 response.on_server_error do
   # oh noes
@@ -57,6 +57,14 @@ response[:message]
 # => hello world
 ```
 
+Macros are also provided to keep common tasks clean, clear and concise.
+```crystal
+def example_request_wrapper : { message: String }
+  Responsible.parse_to_return_type do
+    HTTP::Client.get("https://www.example.com")
+  end
+end
+```
 ---
 
 Responsible Responses™ maintain all existing functionality of a vanilla response object.
