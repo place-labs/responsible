@@ -11,9 +11,18 @@ module Responsible
     end
   {% end %}
 
-  macro support(response_type)
+  # Adds Responsible support to the specified response type object.
+  #
+  # `ResponsibleInterface contains a minimal set of abstract methods that are
+  # compatible with `HTTP::Client::Response` as well as many third-party
+  # libraries without modification. If you do need to specify an implimentation
+  # to map to other types, an option block may be used to specify the required
+  # implementations.
+  macro support(response_type, &block)
     class {{response_type.id}}
       include Responsible::ResponseInterface
+
+      {{ block.body if block.is_a? AstNode }}
     end
   end
 end
