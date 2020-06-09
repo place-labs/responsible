@@ -2,11 +2,17 @@ require "json"
 require "./response_interface"
 require "./response_type"
 
+# Wrapper object for lifted responses. Provides extensions need for defining
+# locally scoped error behaviors and parse tools for extraction of returned
+# data.
 class Responsible::Response
   @response : ResponseInterface
   @type : ResponseType
   @in_handler : Bool = false
 
+  # Creates a new `Response` by wrapping a supported response type. *response*
+  # must by a type that includes `ResponsibleInterface`. This can be inserted
+  # manually, or by using the `Responsible.support` macro.
   def initialize(@response)
     @type = ResponseType.from(@response.status)
     run_global_handler
@@ -14,13 +20,14 @@ class Responsible::Response
 
   forward_missing_to @response
 
+  # Runs the passed action within a handler context.
   private def run(&block : Action)
     @in_handler = true
     yield self
     @in_handler = false
   end
 
-  # Executes a global handler for the reponse type, if registered.
+  # Executes a global handler for the reponse type if one is registered.
   private def run_global_handler
     handler = HANDLERS[@type]?
     run(&handler) if handler

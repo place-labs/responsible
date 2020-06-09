@@ -1,4 +1,4 @@
-# responsible
+# Responsible
 
 In the wise words of the modern poet Ice Cube:
 
@@ -7,7 +7,7 @@ In the wise words of the modern poet Ice Cube:
 Responsible is a library that makes it simple, fast an easy to check HTTP responses in crystal-lang.
 It provides a lightweight API for dealing with errors, logging and static, type-safe parsing.
 It works directly with `HTTP::Client::Response` objects and can function in tandem with clients that build on top of these.
-Third party libraries (like [halite](https://github.com/icyleaf/halitea), [crest](https://github.com/mamantoha/crest) and others) are [supported](#third-party-support) too!
+Third party libraries (like [halite](https://github.com/icyleaf/halitea), [crest](https://github.com/mamantoha/crest) and others) are [supported](#third-party-support) too.
 
 
 ## What this isn't

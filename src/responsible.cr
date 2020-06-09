@@ -1,6 +1,7 @@
 require "./responsible/**"
 require "http/client/response"
 
+# Base module for top level macros and utilities.
 module Responsible
   HANDLERS = {} of ResponseType => Action
 
@@ -30,7 +31,16 @@ module Responsible
   # `Responsible::Response` before attempting to parse this out into the return
   # type of the surrounding method.
   #
-  # This may be 
+  # This may be used to provied a clean, minimal syntax when building methods
+  # that abstract over API calls.
+  #
+  # ```
+  # def example_request : {response_field_a: String, response_field_b: Bool}
+  #   Responsible.parse_to_return_type do
+  #     HTTP::Client.get "https://www.example.com"
+  #   end
+  # end
+  # ```
   macro parse_to_return_type(&block)
     \{{ raise "no return type on method" if @def.return_type.is_a? Nop }}
     %response = begin
