@@ -57,7 +57,7 @@ response[:message]
 # => hello world
 ```
 
-Macros are also provided to keep common tasks clean, clear and concise.
+A small selection of macros are also provided to keep common tasks clean, clear and concise.
 ```crystal
 def example_request_wrapper : { message: String }
   Responsible.parse_to_return_type do

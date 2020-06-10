@@ -28,6 +28,29 @@ module Responsible
   end
 
   # Wraps a expression that returns a supported response object into a
+  # `Responsible::Response` and attempts to parse this into the specified type.
+  macro parse_to(type, ignore_response_code = false, &block)
+    begin
+      %response = begin
+        {{ block.body }}
+      end
+      Responsible::Response.new(%response).parse_to({{ type.id }}, {{ ignore_response_code.id }})
+    end
+  end
+
+  # Wraps a expression that returns a supported response object into a
+  # `Responsible::Response` and parse this into the specified type, or nil if
+  # not compatible.
+  macro parse_to?(type, ignore_response_code = false, &block)
+    begin
+      %response = begin
+        {{ block.body }}
+      end
+      Responsible::Response.new(%response).parse_to?({{ type.id }}, {{ ignore_response_code.id }})
+    end
+  end
+
+  # Wraps a expression that returns a supported response object into a
   # `Responsible::Response` before attempting to parse this out into the return
   # type of the surrounding method.
   #
@@ -41,12 +64,11 @@ module Responsible
   #   end
   # end
   # ```
-  macro parse_to_return_type(&block)
+  macro parse_to_return_type(ignore_response_code = false, &block)
     \{{ raise "no return type on method" if @def.return_type.is_a? Nop }}
-    %response = begin
+    Responsible.parse_to(\{{ @def.return_type }}, {{ ignore_response_code}}) do
       {{ block.body }}
     end
-    Responsible::Response.new(%response).parse_to(\{{ @def.return_type }})
   end
 end
 

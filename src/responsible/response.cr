@@ -72,7 +72,7 @@ class Responsible::Response
   # Parses the contents of this response to the type *x*, or raises an
   # `Responsible::Error` if this is not possible.
   def parse_to(x : T.class, ignore_response_code = @in_handler) : T forall T
-    parse_to(x, ignore_response_code) do |error|
+    self.parse_to(x, ignore_response_code) do |error|
       raise Error.new "Could not parse to #{T}: #{error.message}", cause: error
     end
   end
@@ -80,7 +80,7 @@ class Responsible::Response
   # Parses the contents of this response to the type *x*, or nil if this is not
   # possible.
   def parse_to?(x : T.class, ignore_response_code = @in_handler) : T? forall T
-    parse_to(x, ignore_response_code) do
+    self.parse_to(x, ignore_response_code) do
       nil
     end
   end
@@ -91,9 +91,9 @@ class Responsible::Response
   # otherwise a `Responsible::Error` will be raised if parsing is not possible.
   def >>(x : T.class) : T forall T
     {% if T.nilable? %}
-      parse_to? x, ignore_response_code: true
+      self.parse_to? x, ignore_response_code: true
     {% else %}
-      parse_to x
+      self.parse_to x
     {% end %}
   end
 end
