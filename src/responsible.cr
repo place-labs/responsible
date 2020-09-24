@@ -72,4 +72,5 @@ module Responsible
   end
 end
 
+require "./core_ext/http/client/response"
 Responsible.support HTTP::Client::Response
