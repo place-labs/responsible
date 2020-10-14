@@ -1,4 +1,5 @@
 require "json"
+require "mime/media_type"
 require "./response_interface"
 require "./response_type"
 
@@ -55,17 +56,16 @@ class Responsible::Response
   def parse_to(x : T.class, ignore_response_code = @in_handler, &block : Exception -> U) : T | U forall T, U
     raise Error.from(self) unless success? || ignore_response_code
 
-    content_type = headers["content-type"].split(' ').first.downcase
+    mime_type = MIME::MediaType.parse headers["Content-Type"]
 
-    case content_type
-    when "application/json"
+    if mime_type.media_type == "application/json"
       begin
         T.from_json(@response.body? || @response.body_io)
       rescue e
         yield e
       end
     else
-      raise Error.new "unsupported content type (#{content_type})"
+      raise Error.new "unsupported MIME type (#{mime_type})"
     end
   end
 

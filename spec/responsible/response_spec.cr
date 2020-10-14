@@ -43,6 +43,18 @@ describe Responsible::Response do
       end
       error_block_executed.should be_true
     end
+
+    it "correctly parses content types" do
+      WebMock.stub(:get, "www.example.com").to_return(
+        headers: { "Content-Type" => "application/json; charset=UTF-8" },
+        body: <<-JSON
+          {"value":"foo"}
+        JSON
+      )
+      response = ~HTTP::Client.get("www.example.com") 
+      result = response.parse_to NamedTuple(value: String)
+      result[:value].should eq("foo")
+    end
   end
 
   describe "#parse_to?" do
