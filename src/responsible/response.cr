@@ -22,7 +22,7 @@ class Responsible::Response
   forward_missing_to @response
 
   # Runs the passed action within a handler context.
-  private def run(&block : Action)
+  private def run(& : Action)
     @in_handler = true
     yield self
     @in_handler = false
@@ -36,7 +36,7 @@ class Responsible::Response
 
   {% for response_type in ResponseType.constants.map(&.underscore) %}
     # Execute the passed block if this is a {{response_type}} response.
-    def on_{{response_type}}(&block : Action) : self
+    def on_{{response_type}}(& : Action) : self
       if @type.{{response_type}}?
         run { yield self }
       end
@@ -53,7 +53,7 @@ class Responsible::Response
   # `T.from_json` must exist and be capable of deserializing a JSON string.
   # This works out-of-the-box for most types where attributes map directly. The
   # `JSON::Serializable` module provides tools for more complex parsing.
-  def parse_to(x : T.class, ignore_response_code = @in_handler, &block : Exception -> U) : T | U forall T, U
+  def parse_to(x : T.class, ignore_response_code = @in_handler, & : Exception -> U) : T | U forall T, U
     raise Error.from(self) unless success? || ignore_response_code
 
     mime_type = MIME::MediaType.parse headers["Content-Type"]
