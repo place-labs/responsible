@@ -32,7 +32,7 @@ It deals purely with response objects once you already have them, regardless of 
 3. Load via:
 
    ```crystal
-   require "responsible"`
+   require "responsible"
    ```
 
 
