@@ -4,7 +4,7 @@ version: 1.2.2
 authors:
   - Kim Burgess <kim@place.technology>
 
-crystal: "1.0.0"
+crystal: ">= 0.34, < 2"
 
 license: MIT
 
