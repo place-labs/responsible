@@ -1,10 +1,10 @@
 name: responsible
-version: 1.2.2
+version: 1.2.3
 
 authors:
   - Kim Burgess <kim@place.technology>
 
-crystal: 0.34.0
+crystal: ">= 0.34.0, < 2.0.0"
 
 license: MIT
 
